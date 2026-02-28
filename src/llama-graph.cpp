@@ -2504,6 +2504,10 @@ void llm_graph_context::build_pooling(
             {
                 ggml_tensor * inp_mean = build_inp_mean();
                 cur = ggml_mul_mat(ctx0, ggml_cont(ctx0, ggml_transpose(ctx0, inp)), inp_mean);
+
+                if (arch == LLM_ARCH_QWEN3) {
+                    cur = ggml_l2_norm(ctx0, cur, 1e-6f);
+                }
             } break;
         case LLAMA_POOLING_TYPE_CLS:
         case LLAMA_POOLING_TYPE_LAST:
